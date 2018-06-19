@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <link rel="stylesheet" href="./video.css">
 </head>
 <style>
   .video {
@@ -25,26 +26,34 @@
   <button id="pause" style="position: absolute; z-index: 10;right: 0;">----------------</button>
   <div id="parent" style="position:absolute; z-index: 10; bottom: 0"></div>
 
-  <video id="video" class="video" preload="auto" webkit-playsinline="true" playsinline="true" x-webkit-airplay="allow" x5-video-player-type="h5"
+  <video id="video" preload="auto" webkit-playsinline="true" playsinline="true" x-webkit-airplay="allow" x5-video-player-type="h5"
     x5-video-player-fullscreen="true" x5-video-orientation="portraint" src="http://p59520ksu.bkt.clouddn.com/new.mp4" style="object-fit:fill">
   </video>
+  <script src="/node_modules/vconsole/dist/vconsole.min.js"></script>
   <script type="text/javascript">
+    //初始化vconsole
+    var vConsole = new VConsole();
+    console.log( 'Hello world' );
+
     var $play = document.getElementById( "play" );
     var $pause = document.getElementById( "pause" );
     var $video = document.getElementById( "video" );
     var movie1 = 3.196909;
-    $play.onclick = function ()
-    {
+    $play.onclick = function () {
       $video.play();
     }
-    $pause.onclick = function ()
-    {
+    $pause.onclick = function () {
       $video.pause();
     }
 
     //手机适配居中
-    function handleResize()
-    {
+    var clientWidth = document.documentElement.clientWidth;
+    var clientHeight = document.documentElement.clientHeight;
+    $video.style.width = clientWidth + "px";
+    $video.style.height = clientHeight + "px";
+
+
+    function handleResize() {
       var sWidth = 9
       var sHeight = 16
       var width = window.innerWidth
@@ -52,26 +61,21 @@
       var marginTop = height - ( width * sHeight ) / sWidth
       console.log( width, height )
       marginTop = Math.round( marginTop )
-      if ( marginTop < -2 )
-      {
+      if ( marginTop < -2 ) {
         video.css( 'marginTop', marginTop / 2 + 'px' )
-      } else
-      {
+      } else {
         video.css( 'marginTop', '0' )
       }
     }
 
-    document.addEventListener( "WeixinJSBridgeReady", function ()
-    {
+    document.addEventListener( "WeixinJSBridgeReady", function () {
       alert( "嘿嘿" );
     }, false );
     //监听视频播放
-    video.addEventListener( 'timeupdate', function ( e )
-    {
+    video.addEventListener( 'timeupdate', function ( e ) {
       console.log( video.currentTime ) // 当前播放的进度
       var currentTime = video.currentTime.toFixed( 5 );
-      if ( currentTime >= movie1 )
-      {
+      if ( currentTime >= movie1 ) {
         $video.pause();
         var parent = document.getElementById( "parent" );
         var div = document.createElement( "div" );
@@ -79,24 +83,17 @@
         div.innerHTML = "点击继续";
         parent.appendChild( div );
         var neeDiv = document.getElementById( 'newDiv' );
-        neeDiv.onclick = function ()
-        {
-          movie1=9;
+        neeDiv.onclick = function () {
+          movie1 = 9;
           $video.play();
         }
       }
     } )
     // 点击继续
 
-
-
-    video.addEventListener( 'ended', function ( e )
-    {
+    video.addEventListener( 'ended', function ( e ) {
       // 播放结束时触发
     } )
-
-
-
   </script>
 </body>
 
