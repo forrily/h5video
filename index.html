@@ -12,6 +12,12 @@
     height: 100%;
     width: 100%;
   }
+
+  #newDiv {
+    width: auto;
+    height: 50px;
+    background-color: brown;
+  }
 </style>
 
 <body>
@@ -26,7 +32,7 @@
     var $play = document.getElementById( "play" );
     var $pause = document.getElementById( "pause" );
     var $video = document.getElementById( "video" );
-    var movie1 = 3;
+    var movie1 = 3.196909;
     $play.onclick = function ()
     {
       $video.play();
@@ -54,6 +60,11 @@
         video.css( 'marginTop', '0' )
       }
     }
+
+    document.addEventListener( "WeixinJSBridgeReady", function ()
+    {
+      alert( "嘿嘿" );
+    }, false );
     //监听视频播放
     video.addEventListener( 'timeupdate', function ( e )
     {
@@ -63,14 +74,20 @@
       {
         $video.pause();
         var parent = document.getElementById( "parent" );
-        parent.innerHTML = "<div>点击继续</div>";
+        var div = document.createElement( "div" );
+        div.setAttribute( "id", "newDiv" );
+        div.innerHTML = "点击继续";
+        parent.appendChild( div );
+        var neeDiv = document.getElementById( 'newDiv' );
+        neeDiv.onclick = function ()
+        {
+          movie1=9;
+          $video.play();
+        }
       }
     } )
     // 点击继续
-    parent.onclick = function ()
-    {
-      $video.play();
-    }
+
 
 
     video.addEventListener( 'ended', function ( e )
