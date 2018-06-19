@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<style>
+  .video {
+    height: 100%;
+    width: 100%;
+  }
+</style>
+
+<body>
+  <button id="play" style="position:absolute; z-index: 10;">++++++++++++</button>
+  <button id="pause" style="position: absolute; z-index: 10;right: 0;">----------------</button>
+  <div id="parent" style="position:absolute; z-index: 10; bottom: 0"></div>
+
+  <video id="video" class="video" preload="auto" webkit-playsinline="true" playsinline="true" x-webkit-airplay="allow" x5-video-player-type="h5"
+    x5-video-player-fullscreen="true" x5-video-orientation="portraint" src="http://p59520ksu.bkt.clouddn.com/new.mp4" style="object-fit:fill">
+  </video>
+  <script type="text/javascript">
+    var $play = document.getElementById( "play" );
+    var $pause = document.getElementById( "pause" );
+    var $video = document.getElementById( "video" );
+    var movie1 = 3;
+    $play.onclick = function ()
+    {
+      $video.play();
+    }
+    $pause.onclick = function ()
+    {
+      $video.pause();
+    }
+
+    //手机适配居中
+    function handleResize()
+    {
+      var sWidth = 9
+      var sHeight = 16
+      var width = window.innerWidth
+      var height = window.innerHeight
+      var marginTop = height - ( width * sHeight ) / sWidth
+      console.log( width, height )
+      marginTop = Math.round( marginTop )
+      if ( marginTop < -2 )
+      {
+        video.css( 'marginTop', marginTop / 2 + 'px' )
+      } else
+      {
+        video.css( 'marginTop', '0' )
+      }
+    }
+    //监听视频播放
+    video.addEventListener( 'timeupdate', function ( e )
+    {
+      console.log( video.currentTime ) // 当前播放的进度
+      var currentTime = video.currentTime.toFixed( 5 );
+      if ( currentTime >= movie1 )
+      {
+        $video.pause();
+        var parent = document.getElementById( "parent" );
+        parent.innerHTML = "<div>点击继续</div>";
+      }
+    } )
+    // 点击继续
+    parent.onclick = function ()
+    {
+      $video.play();
+    }
+
+
+    video.addEventListener( 'ended', function ( e )
+    {
+      // 播放结束时触发
+    } )
+
+
+
+  </script>
+</body>
+
+</html>
+
+<!-- <video
+  id="videoALL"
+  src="video/01.mp4"
+  poster="images/1.jpg" /*视频封面*/
+  preload="auto"
+  webkit-playsinline="true" /*这个属性是ios 10中设置可以
+                     让视频在小窗内播放，也就是不是全屏播放*/  
+  playsinline="true"  /*IOS微信浏览器支持小窗内播放*/ 
+  x-webkit-airplay="allow"
+  x5-video-player-type="h5"  /*启用H5播放器,是wechat安卓版特性*/
+  x5-video-player-fullscreen="true" /*全屏设置，
+                     设置为 true 是防止横屏*/>
+  x5-video-orientation="portraint" /*播放器支付的方向，
+                     landscape横屏，portraint竖屏，默认值为竖屏*/
+  style="object-fit:fill">
+</video> -->
