@@ -1,7 +1,7 @@
 // var $play = document.getElementById( "play" );
 // var $pause = document.getElementById( "pause" );
 var $video = document.getElementById( "video" );
-var movie1 = 3.196909;
+var movie1 = 5.196909;
 var movie2 = 9;
 // $play.onclick = function ()
 // {
@@ -60,6 +60,8 @@ $( document ).ready( function () {
   videoClickPlay();//监听页面点击
   $( "#parent" ).click( function () {
     console.log( "点击继续已点击" );
+    fadeOut( document.getElementById( "fingerprint_txt1" ) );
+    $( "#parent" ).css("display","none");   
     show_video();
     $video.play();
   } )
@@ -122,19 +124,20 @@ video.addEventListener( 'timeupdate', function ( self ) {
       var parent = document.getElementById( "parent" );
       var div = document.createElement( "div" );
       div.setAttribute( "id", "newDiv" );
+      fadeIn( document.getElementById( "fingerprint_txt1" ) );      
       div.innerHTML = "点击继续";
-      // fadeIn( document.getElementById( "fingerprint_txt1" ) );
       parent.appendChild( div );
-      // var neeDiv = document.getElementById( 'newDiv' );
-      // neeDiv.onclick = function () {
-      //   fadeOut( document.getElementById( "fingerprint_txt1" ) );
-      //   movie1 = 9;
-      //   $video.play();
-      // }
+      console.log(pauseCount);
     }
-    if( currentTime >= movie1 ) {
+    if( currentTime >= movie2 ) {
       if( pauseCount > 1 && pauseCount <= 2 ) {
-        $( '#parent' ).css('display','none');
+        $video.pause();
+        pauseCount++;
+        var parent = document.getElementById( "parent" );
+        var div = document.createElement( "div" );
+        div.setAttribute( "id", "newDiv" );
+        div.innerHTML = "点击继续";
+        parent.appendChild( div );
       }
     }
 
