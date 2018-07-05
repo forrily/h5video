@@ -1,7 +1,8 @@
-var $play = document.getElementById( "play" );
-var $pause = document.getElementById( "pause" );
+// var $play = document.getElementById( "play" );
+// var $pause = document.getElementById( "pause" );
 var $video = document.getElementById( "video" );
 var movie1 = 3.196909;
+var movie2 = 9;
 // $play.onclick = function ()
 // {
 //   $video.play();
@@ -11,11 +12,12 @@ var movie1 = 3.196909;
 //   $video.pause();
 // }
 
+
 //手机适配居中
-var clientWidth = document.documentElement.clientWidth;
-var clientHeight = document.documentElement.clientHeight;
-$video.style.width = clientWidth + "px";
-$video.style.height = clientHeight + "px";
+// var clientWidth = document.documentElement.clientWidth;
+// var clientHeight = document.documentElement.clientHeight;
+// $video.style.width = clientWidth + "px";
+// $video.style.height = clientHeight + "px";
 //判断手机系统
 var isAndroid = 0;
 function AndroidOriOS() {
@@ -30,38 +32,47 @@ function AndroidOriOS() {
 }
 //阻止视频上的默认点击
 function stopDefault() {
-  $video.click( function ( event ) {
-    console.log( event );
+  $( "#video" ).on( "onclick", function ( event ) {
+    console.log( 'stopDefault', event );
     event.preventDefault();
   } );
-  $video.on("touchstart", function ( event ) {
+  $( "#video" ).on( "touchstart", function ( event ) {
+    console.log( event );
     event.preventDefault();
   } );
 }
 
+// $(document).bind('mobileinit',function(){
+//   $.mobile.loadingMessage=false;
+// })
+
 // 视频暂停位置do sth
-$( function () {
-  console.log('视频暂停位置do sth')
-  $video = $( "#video" );
-  // $fingerprint = $("#fingerprint");
-  stopDefault();
-  // 阻止video 默认点击
-  AndroidOriOS();
-  //判断 ios OR an
-  acquiring();
-  loading();
-  var evt = "onorientationchange" in window ? "orientationchange" : "resize";
-  window.addEventListener( evt, acquiring, false );
-  $( "#section0>.loader" ).click( function () {
-    console.log( "#section0>.loader.click" )
-    $( "#section0" ).hide();
-    $( "#section1" ).css('display','flex');
+$( document ).ready( function () {
+  console.log( '视频开始阻止默认点击操作，判断设备系统，检测屏幕方向' );
+  $( ".ui-loader" ).hide();
+  stopDefault();// 阻止video 默认点击  
+  AndroidOriOS(); //判断 ios OR an 
+  // loading();
+  // 预加载素材
+  acquiring();//检测屏幕方向是否发生改变
+  $( window ).orientationchange(); //检测屏幕方向 
+
+  videoClickPlay();//监听页面点击
+  $( "#parent" ).click( function () {
+    console.log( "点击继续已点击" );
+    show_video();
     $video.play();
-    // $( "#section1" ).show();
-  } );
-  $video.on( "timeupdate", function () {
-    timeupdate( this );
-  } ).on( "ended", ended );
+  } )
+  // var neeDiv = document.getElementById( 'newDiv' );
+  // neeDiv.onclick = function () {
+  //   fadeOut( document.getElementById( "fingerprint_txt1" ) );
+  //   movie1 = 9;
+  //   $video.play();
+  // }
+
+  // $video.on( "timeupdate", function () {
+  //   timeupdate( this );
+  // } ).on( "ended", ended );
 } );
 
 //预加载
@@ -77,45 +88,62 @@ function loading() {
     },
     onComplete: function () {
       console.log( 'oncomplete:all source loaded:', arguments )
-      document.getElementById( 'section0' ).style.display = "flex";
-      // $( "#section0" ).show();      
+      // document.getElementById( 'section0' ).style.display = "flex";
+      $( "#section0" ).show();
       // $( "#section1" ).show();
+      // var setTime = setTimeout( function () {
+      //   $( "#section1" ).children( ".fingerprint-trigger" ).show();
+      //   clearInterval( setTime );
+      //   setTime = null;
+      // }, 1500 );
     }
   } );
 }
 
 // 监听页面点击
-// $( "#section0>.loader" ).click( function () {
-//   show_video();
-//   console.log( '点击了开始按钮' );
-//   $video.play();
-// } )
-document.getElementById( 'section0' ).addEventListener( 'click', function () {
-  document.getElementById( 'section0' ).style.display = "none";
-  show_video();
-  console.log( '点击了开始按钮' );
-  $video.play();
-} )
+function videoClickPlay() {
+  $( "#section0" ).click( function () {
+    console.log( "#section0>.loader.click 点击了开始按钮" )
+    $( "#section0" ).hide();
+    show_video();
+    $video.play();
+  } );
+}
 
+var pauseCount = 0;
 //监听视频播放
 video.addEventListener( 'timeupdate', function ( self ) {
   console.log( video.currentTime ) // 当前播放的进度
   var currentTime = video.currentTime.toFixed( 5 );
   if( currentTime >= movie1 ) {
-    $video.pause();
-    var parent = document.getElementById( "parent" );
-    var div = document.createElement( "div" );
-    div.setAttribute( "id", "newDiv" );
-    div.innerHTML = "点击继续";
-    fadeIn( document.getElementById( "fingerprint_txt1" ) );
-    parent.appendChild( div );
-    var neeDiv = document.getElementById( 'newDiv' );
-    neeDiv.onclick = function () {
-      fadeOut( document.getElementById( "fingerprint_txt1" ) );
-      movie1 = 9;
-      $video.play();
+    if( pauseCount >= 0 && pauseCount < 1 ) {
+      $video.pause();
+      pauseCount++;
+      var parent = document.getElementById( "parent" );
+      var div = document.createElement( "div" );
+      div.setAttribute( "id", "newDiv" );
+      div.innerHTML = "点击继续";
+      // fadeIn( document.getElementById( "fingerprint_txt1" ) );
+      parent.appendChild( div );
+      // var neeDiv = document.getElementById( 'newDiv' );
+      // neeDiv.onclick = function () {
+      //   fadeOut( document.getElementById( "fingerprint_txt1" ) );
+      //   movie1 = 9;
+      //   $video.play();
+      // }
     }
+    if( currentTime >= movie1 ) {
+      if( pauseCount > 1 && pauseCount <= 2 ) {
+        $( '#parent' ).css('display','none');
+      }
+    }
+
   }
+
+  // if( currentTime > movie2 ) {
+  //   $video.play();
+  // }
+
 } )
 
 // fade in
@@ -136,7 +164,7 @@ function fadeIn( el, display ) {
 function fadeOut( el ) {
   el.style.opacity = 1;
   ( function fade() {
-    if( ( el.style.opacity -= .1 ) < 0 ) {
+    if( ( el.style.opacity -= 1 ) < 0 ) {
       el.style.display = "none";
     } else {
       requestAnimationFrame( fade );
@@ -145,58 +173,38 @@ function fadeOut( el ) {
 }
 //end
 function ended() {
-  $( "#mask" ).css( "display", "flex" );
+  $( "#mask" ).css( "display", "block" );
 }
 
 function show_video() {
   document.getElementById( "section1" ).style.display = "flex";
 }
-
+function showButton() {
+  document.getElementById( "showButton" ).style.display = "block";
+}
 
 //监听是否微信浏览器
 document.addEventListener( "WeixinJSBridgeReady", function () {
-  alert( "player enterfullscreen" );
-  document.getElementById( 'section0' ).style.display = "none";
-  show_video();
-  console.log( '点击了开始按钮' );
-  // $( '#video' ).play();
+
 }, false );
 
 // 点击继续
-
 video.addEventListener( 'ended', function ( e ) {
   // 播放结束时触发
 } )
+
 //设置横屏
 function acquiring() {
-  // 获取设备宽高
-  /*
-   var h = document.documentElement.clientHeight, w = document.documentElement.clientWidth, hint = h > w, ntransform_origin = w / 2;
-   if (hint) {
-   //竖屏
-   $(".container").css({
-   height: w,
-   width: h,
-   transform: "rotate(90deg)",
-   "transform-origin": ntransform_origin
-   });
-   } else {
-   //横屏
-   $(".container").css({
-   height: h,
-   width: w,
-   "transform-origin": 0,
-   transform: "rotate(0deg)"
-   });
-   }
-   */
-  var orientation = window.orientation;
-  if( orientation != 0 ) {
-    document.getElementById( "model" ).style.display = "none";
-  } else {
-    document.getElementById( "model" ).style.display = "flex";
-  }
-
+  // 检测设备是否横向
+  $( window ).on( "orientationchange", function ( event ) {
+    console.log( event );
+    if( event.orientation == "portrait" || event.orientation == 0 ) {
+      console.log( "竖屏" );
+      $( "#model" ).css( "display", "block" );
+    } else if( event.orientation == "landscape" ) {
+      $( "#model" ).css( "display", "none" );
+    }
+  } );
 }
 
 
